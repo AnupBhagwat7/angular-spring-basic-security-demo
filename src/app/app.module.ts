@@ -21,7 +21,6 @@ import { LoginComponent } from './components/login/login.component';
 import { BasicAuthHtppInterceptorService } from './services/basic-auth-htpp-interceptor.service';
 import { AuthenticationService } from './services/authentication.service';
 import { AuthGaurdService } from './services/auth-gaurd.service';
-import { HttpClientService } from './services/http-client.service';
 
 @NgModule({
   declarations: [
@@ -97,7 +96,7 @@ import { HttpClientService } from './services/http-client.service';
 
   entryComponents: [LoginComponent],
 
-  providers: [TodoService, AuthGaurdService, AuthenticationService, HttpClientService, {
+  providers: [TodoService, AuthGaurdService, AuthenticationService, {
     provide: HTTP_INTERCEPTORS, useClass: BasicAuthHtppInterceptorService, multi: true
   }],
 

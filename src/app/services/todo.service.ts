@@ -11,7 +11,10 @@ export class TodoService {
 
   endpoint = 'http://localhost:8081/api';
 
-  constructor(private http: HttpClient) {
+  username = 'myjavablog';
+  password = 'secure';
+
+  constructor(private httpClient: HttpClient) {
   }
 
   // Http Options
@@ -20,61 +23,39 @@ export class TodoService {
       'Content-Type': 'application/json'
     })
   }
+  
+  public deleteTodo(todoId) {
+
+    const headers = new HttpHeaders({ Authorization: 'Basic ' + btoa(this.username + ':' + this.password) });
+    return this.httpClient.delete<Todo>("http://localhost:8081/api/todo" + "/" + todoId, { headers });
+  }
+
+  public createTodo(todo) {
+
+    const headers = new HttpHeaders({ Authorization: 'Basic ' + btoa(this.username + ':' + this.password) });
+    return this.httpClient.post<Todo>("http://localhost:8081/api/todo", todo, { headers });
+  }
 
   // To Get List Of Todos
   getTodoList(): Observable<any> {
-    return this.http.get(this.endpoint + '/todos')
-      .pipe(
-        retry(1),
-        catchError(this.handleError)
-      );
+    
+    const headers = new HttpHeaders({ Authorization: 'Basic ' + btoa(this.username + ':' + this.password) });
+    return this.httpClient.get<Todo[]>('http://localhost:8081/api/todos', { headers });
   }
 
   // HttpClient API get() method => Fetch Todo
   getTodo(id): Observable<Todo> {
-    return this.http.get<Todo>(this.endpoint + '/todos/' + id)
-      .pipe(
-        retry(1),
-        catchError(this.handleError)
-      )
-  }
 
-  // HttpClient API post() method => Create Todo
-  createTodo(todo): Observable<Todo> {
-    return this.http.post<Todo>(this.endpoint + '/todo', JSON.stringify(todo), this.httpOptions)
-      .pipe(
-        retry(1),
-        catchError(this.handleError)
-      )
+    const headers = new HttpHeaders({ Authorization: 'Basic ' + btoa(this.username + ':' + this.password) });
+    return this.httpClient.get<Todo>(this.endpoint + '/todos/' + id, { headers });
   }
-
+  
   // HttpClient API put() method => Update Todo
   updateTodo(id, todo): Observable<Todo> {
-    return this.http.put<Todo>(this.endpoint + '/todo' , JSON.stringify(todo), this.httpOptions)
-      .pipe(
-        retry(1),
-        catchError(this.handleError)
-      )
+    
+    const headers = new HttpHeaders({ Authorization: 'Basic ' + btoa(this.username + ':' + this.password) });
+    return this.httpClient.put<Todo>(this.endpoint + '/todo' , JSON.stringify(todo), { headers });
+      
   }
 
-  // HttpClient API delete() method => Delete Todo
-  deleteTodo(id):Observable<Todo[]> {
-    console.log("Delete id "+ id);
-    return this.http.delete<Todo[]>(this.endpoint+ '/todo/' + id);
-
-  }
-
-  // Error handling 
-  handleError(error) {
-    let errorMessage = '';
-    if (error.error instanceof ErrorEvent) {
-      // Get client-side error
-      errorMessage = error.error.message;
-    } else {
-      // Get server-side error
-      errorMessage = `Error Code: ${error.status}\nMessage: ${error.message}`;
-    }
-    window.alert(errorMessage);
-    return throwError(errorMessage);
-  }
 }

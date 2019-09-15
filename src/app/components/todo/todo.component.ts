@@ -64,7 +64,7 @@ export class TodoComponent implements OnInit {
 
   //Delete Todo
   deleteTodo(todoId) {
-    console.log("Delete id" + todoId);
+    console.log("Delete id : " + todoId);
     this.todoService.deleteTodo(todoId).subscribe((data) => {
       console.log("success");
       this.notifier.notify("success", "Task deleted successfully!!");
